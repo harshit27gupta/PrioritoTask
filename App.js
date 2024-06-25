@@ -1,12 +1,28 @@
+import React, { useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import StackNavigator from './Navigation/StackNavigator';
+import { NotificationProvider } from './NotificationContext';
+import SplashScreen from './SplashScreen';
 
 export default function App() {
+  const [isSplashFinished, setIsSplashFinished] = useState(false);
+
+  const handleSplashFinish = () => {
+    setIsSplashFinished(true);
+  };
+
+  if (!isSplashFinished) {
+    return <SplashScreen onFinish={handleSplashFinish} />;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NotificationProvider>
+      <NavigationContainer>
+        <StackNavigator />
+      </NavigationContainer>
+    </NotificationProvider>
   );
 }
 
