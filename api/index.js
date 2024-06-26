@@ -13,7 +13,8 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-mongoose.connect( "mongodb+srv://coderman2004:ZUYTsWPFBDK6avBx@managetasks.efpnxs6.mongodb.net/", {
+const connectionsring=process.env.MONGO_URL || "mongodb+srv://coderman2004:ZUYTsWPFBDK6avBx@managetasks.efpnxs6.mongodb.net/";
+mongoose.connect( connectionsring, {
 })
     .then(() => {console.log('MongoDB connected successfully')    
         
@@ -476,7 +477,7 @@ app.get('/user', async (req, res) => {
   });
   
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
