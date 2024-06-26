@@ -8,7 +8,7 @@
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/adjusted_splash_screen.jpg",
-     "resizeMode": "cover",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "ios": {
@@ -18,11 +18,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adjusted_splash_screen.jpg",
         "backgroundColor": "#ffffff"
-  
-      }
+      },
+      "package": "com.harshitraj2708.prioritotask"
     },
     "web": {
       "favicon": "./assets/adjusted_splash_screen.jpg"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "63d8e33e-05c3-43e7-96d7-7150ccab31b0"
+      }
     }
   }
 }

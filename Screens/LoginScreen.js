@@ -46,7 +46,7 @@ const LoginScreen = () => {
     }
     setLoading(true);
     try {
-      const response = await axios.post("http://192.168.29.252:5000/login", {
+      const response = await axios.post("https://prioritotask-12.onrender.com/login", {
         email,
         password,
       });

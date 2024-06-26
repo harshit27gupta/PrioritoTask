@@ -21,7 +21,7 @@ const ResetPasswordScreen = () => {
     }
 
     try {
-      const response = await axios.post('http://192.168.29.252:5000/reset-password', { email, otp, newPassword });
+      const response = await axios.post('https://prioritotask-12.onrender.com/reset-password', { email, otp, newPassword });
       if (response.status === 200) {
         Alert.alert('Success', 'Password reset successfully');
         navigation.navigate('Login');

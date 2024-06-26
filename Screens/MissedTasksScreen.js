@@ -10,7 +10,7 @@ const MissedTasksScreen = () => {
   useEffect(() => {
     const fetchMissedTasks = async () => {
       const userEmail = await AsyncStorage.getItem('email');
-      const response = await axios.get(`http://192.168.29.252:5000/alltasks?userEmail=${userEmail}`);
+      const response = await axios.get(`https://prioritotask-12.onrender.com/alltasks?userEmail=${userEmail}`);
       const allTasks = response.data;
       const currentDate = new Date();
   

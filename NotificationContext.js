@@ -42,7 +42,7 @@ export const NotificationProvider = ({ children }) => {
 
   const removeNotification = async (id) => {
     try {
-      await axios.delete(`http://192.168.29.252:5000/notifications/${id}`);
+      await axios.delete(`https://prioritotask-12.onrender.com/notifications/${id}`);
       setNotifications((prevNotifications) =>
         prevNotifications.filter((notification) => notification._id !== id)
       );
