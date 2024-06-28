@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, FlatList, StyleSheet, Animated, Easing } from 'react-native';
+import { View, FlatList, StyleSheet, Animated, Easing, ImageBackground } from 'react-native';
 import { Searchbar, Button, Card, Text, Chip } from 'react-native-paper';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BlurView } from 'expo-blur';
 
 const TaskListScreen = () => {
   const [tasks, setTasks] = useState([]);
@@ -86,48 +87,54 @@ const TaskListScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Searchbar
-        placeholder="Search tasks..."
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-        style={styles.searchbar}
-      />
-      <View style={styles.filterSortContainer}>
-        <Button mode="contained" onPress={() => setSort('dueDate')} style={styles.button}>
-          Sort by Due Date
-        </Button>
-        <Button mode="contained" onPress={() => setSort('priority')} style={styles.button}>
-          Sort by Priority
-        </Button>
-      </View>
-      <FlatList
-        data={sortedTasks}
-        renderItem={({ item }) => (
-          <Card style={styles.card}>
-            <Card.Title title={item.title} subtitle={`Due: ${new Date(item.dueDate).toLocaleDateString()}`} />
-            <Card.Content>
-              <Text>Priority: {item.priority}</Text>
-              <Text>Category: {item.category}</Text>
-              <View style={styles.labelsContainer}>
-                {item.labels.map((label, index) => (
-                  <Chip key={index} style={styles.chip}>{label}</Chip>
-                ))}
-              </View>
-              <Animated.Text style={[styles.status, getStatusStyle(item.status)]}>
-                {item.status === 'done' ? 'Completed' : item.status === 'in-progress' ? 'In Progress' : 'Not Done'}
-              </Animated.Text>
-            </Card.Content>
-          </Card>
-        )}
-        keyExtractor={item => item._id}
-      />
-    </View>
+    <ImageBackground source={require('../Images/tasks.jpeg')} style={styles.backgroundImage}>
+      <BlurView intensity={50} style={styles.blurContainer}>
+        <View style={styles.container}>
+          <Searchbar
+            placeholder="Search tasks..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            style={styles.searchbar}
+          />
+          <View style={styles.filterSortContainer}>
+            <Button mode="contained" onPress={() => setSort('dueDate')} style={styles.button}>
+              Sort by Due Date
+            </Button>
+            <Button mode="contained" onPress={() => setSort('priority')} style={styles.button}>
+              Sort by Priority
+            </Button>
+          </View>
+          <FlatList
+            data={sortedTasks}
+            renderItem={({ item }) => (
+              <Card style={styles.card}>
+                <Card.Title title={item.title} subtitle={`Due: ${new Date(item.dueDate).toLocaleDateString()}`} />
+                <Card.Content>
+                  <Text>Priority: {item.priority}</Text>
+                  <Text>Category: {item.category}</Text>
+                  <View style={styles.labelsContainer}>
+                    {item.labels.map((label, index) => (
+                      <Chip key={index} style={styles.chip}>{label}</Chip>
+                    ))}
+                  </View>
+                  <Animated.Text style={[styles.status, getStatusStyle(item.status)]}>
+                    {item.status === 'done' ? 'Completed' : item.status === 'in-progress' ? 'In Progress' : 'Not Done'}
+                  </Animated.Text>
+                </Card.Content>
+              </Card>
+            )}
+            keyExtractor={item => item._id}
+          />
+        </View>
+      </BlurView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 10, backgroundColor: '#f5f5f5' },
+  backgroundImage: { flex: 1, width: '100%', height: '100%' },
+  blurContainer: { flex: 1 },
+  container: { flex: 1, padding: 10 },
   searchbar: { marginBottom: 10 },
   filterSortContainer: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10 },
   button: { marginHorizontal: 20 },

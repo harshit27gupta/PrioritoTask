@@ -33,7 +33,7 @@ const ResetPasswordScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Reset Password</Text>
+      <Text style={styles.title}>Check your email</Text>
       <View style={styles.inputContainer}>
         <Icon name="key" size={20} color="#666" style={styles.icon} />
         <TextInput

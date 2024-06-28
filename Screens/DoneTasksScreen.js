@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Alert, ActivityIndicator, RefreshControl } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Alert, ActivityIndicator, RefreshControl, ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BlurView } from 'expo-blur';
 
 const DoneTasksScreen = () => {
   const [tasks, setTasks] = useState([]);
@@ -38,7 +39,7 @@ const DoneTasksScreen = () => {
       <Text style={styles.taskTitle}>{item.title}</Text>
       <Text style={styles.taskDescription}>{item.description}</Text>
       <View style={styles.taskFooter}>
-        <Text style={styles.taskDetails}>Done </Text>
+        <Text style={styles.taskDetails}>Done</Text>
         <TouchableOpacity onPress={() => handleDeleteTask(item)}>
           <Icon name="trash" size={24} color="red" />
         </TouchableOpacity>
@@ -65,30 +66,34 @@ const DoneTasksScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Done Tasks</Text>
-      {loading ? (
-        <ActivityIndicator size="large" color="#007BFF" />
-      ) : tasks.length > 0 ? (
-        <FlatList
-          data={tasks}
-          renderItem={renderTask}
-          keyExtractor={(item) => item.title}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        />
-      ) : (
-        <Text style={styles.emptyState}>No tasks marked as done</Text>
-      )}
-    </View>
+    <ImageBackground source={require('../Images/done.jpg')} style={styles.backgroundImage}>
+      <BlurView intensity={50} style={styles.blurContainer}>
+        <View style={styles.container}>
+          {loading ? (
+            <ActivityIndicator size="large" color="#007BFF" />
+          ) : tasks.length > 0 ? (
+            <FlatList
+              data={tasks}
+              renderItem={renderTask}
+              keyExtractor={(item) => item.title}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+            />
+          ) : (
+            <Text style={styles.emptyState}>No tasks marked as done</Text>
+          )}
+        </View>
+      </BlurView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: { flex: 1, width: '100%', height: '100%' },
+  blurContainer: { flex: 1 },
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
     paddingVertical: 20,
     paddingHorizontal: 15,
   },

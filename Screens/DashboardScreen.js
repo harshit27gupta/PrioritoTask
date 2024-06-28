@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Alert, ActivityIndicator, TextInput, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Alert, ActivityIndicator, TextInput, Modal, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNotification } from '../NotificationContext';
 import LottieView from 'lottie-react-native';
+
+// Import imag
 
 const DashboardScreen = () => {
   const navigation = useNavigation();
@@ -201,42 +203,61 @@ const DashboardScreen = () => {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Upcoming Tasks</Text>
-      {loading ? (
-        <ActivityIndicator size="large" color="#007BFF" />
-      ) : tasks.length > 0 ? (
-        <FlatList
-          data={tasks}
-          renderItem={renderTask}
-          keyExtractor={(item) => item.title}
-        />
-      ) : (
-        <Text style={styles.emptyState}>No upcoming tasks</Text>
-      )}
-      <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('TaskCreation')}>
-        <Icon name="add-circle" size={60} color="#007BFF" />
-      </TouchableOpacity>
+  const getCurrentWallpaper = () => {
+    const currentHour = new Date().getHours();
+    if (currentHour < 12) {
+      return require("../Images/goodevening.jpg");
+    } else if (currentHour < 16) {
+      return require("../Images/goodevening.jpg");
+    } else if (currentHour < 19) {
+      return require("../Images/goodevening.jpg");
+    } else {
+      return require("../Images/goodevening.jpg");
+    }
+  };
 
-      <Modal visible={isVerified} transparent animationType="fade">
-        <View style={styles.modalContainer}>
-          <LottieView
-            source={require('../assets/success.json')}
-            autoPlay
-            loop={false}
-            style={styles.lottieAnimation}
+  return (
+    <ImageBackground source={getCurrentWallpaper()} style={styles.backgroundImage}>
+      <View style={styles.container}>
+        <Text style={styles.heading}>Upcoming Tasks</Text>
+        {loading ? (
+          <ActivityIndicator size="large" color="#007BFF" />
+        ) : tasks.length > 0 ? (
+          <FlatList
+            data={tasks}
+            renderItem={renderTask}
+            keyExtractor={(item) => item.title}
           />
-        </View>
-      </Modal>
-    </View>
+        ) : (
+          <Text style={styles.emptyState}>No upcoming tasks</Text>
+        )}
+        <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('TaskCreation')}>
+          <Icon name="add-circle" size={60} color="#007BFF" />
+        </TouchableOpacity>
+
+        <Modal visible={isVerified} transparent animationType="fade">
+          <View style={styles.modalContainer}>
+            <LottieView
+              source={require('../assets/success.json')}
+              autoPlay
+              loop={false}
+              style={styles.lottieAnimation}
+            />
+          </View>
+        </Modal>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'rgba(0,0,0, 0.3)', // Add a slight overlay to make text more readable
     paddingVertical: 20,
     paddingHorizontal: 15,
   },
@@ -245,7 +266,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    color: '#333',
+    color: 'blue',
   },
   taskItem: {
     backgroundColor: '#fff',

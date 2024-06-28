@@ -96,7 +96,7 @@ const TaskCreationScreen = ({ route, navigation }) => {
     <ImageBackground
       source={require('../Images/taskcreation.jpg')}
       style={styles.backgroundImage}
-      blurRadius={10}
+      blurRadius={2}
     >
       <View style={styles.overlay} />
       <ScrollView contentContainerStyle={styles.container}>

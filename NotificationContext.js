@@ -21,7 +21,7 @@ export const NotificationProvider = ({ children }) => {
     };
 
     fetchNotifications();
-    const intervalId = setInterval(fetchNotifications, 60000); // Fetch every 60 seconds
+    const intervalId = setInterval(fetchNotifications, 6000); // Fetch every 60 seconds
     return () => clearInterval(intervalId);
   }, []);
 
@@ -42,7 +42,7 @@ export const NotificationProvider = ({ children }) => {
 
   const removeNotification = async (id) => {
     try {
-      await axios.delete(`https://192.168.29.252:5000/notifications/${id}`);
+      await axios.delete(`http://192.168.29.252:5000/notifications/${id}`);
       setNotifications((prevNotifications) =>
         prevNotifications.filter((notification) => notification._id !== id)
       );

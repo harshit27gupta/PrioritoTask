@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Modal } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Modal, Image } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
@@ -11,6 +11,10 @@ const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
 
   const handleForgotPassword = async () => {
+    if(!email){
+      Alert.alert('Alert','Please enter your email address');
+      return;
+    }
     try {
       const response = await axios.post('http://192.168.29.252:5000/forgot-password', { email });
       if (response.status === 200) {
@@ -28,6 +32,7 @@ const ForgotPasswordScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Image source={require('../Images/reset.jpg')} style={styles.image} />
       <Text style={styles.title}>Forgot Password?</Text>
       <Text style={styles.subtitle}>Don't worry, we got you. Please enter the email you used to register.</Text>
       <View style={styles.inputContainer}>
@@ -65,6 +70,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
     backgroundColor: '#f7f7f7',
+  },
+  image: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'contain',
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,

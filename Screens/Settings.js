@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator, Alert, Image, TouchableOpacity, Pressable } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator, Alert, Image, TouchableOpacity, Pressable, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from "expo-image-picker";
 import * as Animatable from 'react-native-animatable';
 import { CommonActions } from '@react-navigation/native';
+import { useNotification } from '../NotificationContext';
 const SettingsScreen = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -15,7 +16,7 @@ const SettingsScreen = () => {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const navigation = useNavigation();
   const viewRef = useRef(null);
-
+  const { addNotification } = useNotification();
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -52,6 +53,7 @@ const SettingsScreen = () => {
       setUserData(updatedUserData);
       setEditMode(false);
       Alert.alert('Success', 'Profile updated successfully');
+      addNotification("Profile updated successfully");
       setLoading(false);
     } catch (error) {
       console.error('Error updating user data:', error.message);
@@ -110,6 +112,7 @@ const SettingsScreen = () => {
         const source = { uri: result.assets[0].uri };
         setProfilePhoto(source.uri);
         await AsyncStorage.setItem('profilePhoto', source.uri);
+        addNotification("Updated profile photo");
       }
     } catch (error) {
       console.log("Error reading an image", error);
@@ -127,74 +130,85 @@ const SettingsScreen = () => {
 
   return (
     <Animatable.View animation="fadeIn" ref={viewRef} style={styles.container}>
-      <Pressable onPress={handleProfileIconPress}>
-        <View style={styles.profilePhotoSection}>
-          {profilePhoto ? (
-            <Image source={{ uri: profilePhoto }} style={styles.profilePhoto} />
-          ) : (
-            <View style={styles.profilePhotoPlaceholder}>
-              <Text style={styles.profilePhotoPlaceholderText}>No Photo</Text>
+      <ImageBackground 
+        source={require('../Images/wallpaperprofile.jpg')} 
+        style={styles.headerImage} 
+      >
+        <View style={styles.overlay}>
+          <Pressable onPress={handleProfileIconPress}>
+            <View style={styles.profilePhotoSection}>
+              {profilePhoto ? (
+                <Image source={{ uri: profilePhoto }} style={styles.profilePhoto} />
+              ) : (
+                <View style={styles.profilePhotoPlaceholder}>
+                  <Text style={styles.profilePhotoPlaceholderText}>No Photo</Text>
+                </View>
+              )}
             </View>
+          </Pressable>
+          <View style={styles.profileSection}>
+            <TextInput
+              style={[styles.input, !editMode && styles.disabledInput]}
+              value={editMode ? userData.name : userData.name}
+              onChangeText={(text) => setUserData({ ...userData, name: text })}
+              editable={editMode}
+              placeholder="Name"
+            />
+            <TextInput
+              style={[styles.input, styles.disabledInput]}
+              value={userData.email}
+              editable={false}
+              placeholder="Email"
+            />
+            <TextInput
+              style={[styles.input, !editMode && styles.disabledInput]}
+              value={editMode ? userData.mobileNumber : userData.mobileNumber}
+              onChangeText={(text) => setUserData({ ...userData, mobileNumber: text })}
+              editable={editMode}
+              placeholder="Contact"
+            />
+            <TextInput
+              style={[styles.input, !editMode && styles.disabledInput]}
+              value={editMode ? userData.city : userData.city}
+              onChangeText={(text) => setUserData({ ...userData, city: text })}
+              editable={editMode}
+              placeholder="City"
+            />
+          </View>
+          {editMode && (
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="New Password"
+                secureTextEntry
+                value={newPassword}
+                onChangeText={setNewPassword}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Confirm Password"
+                secureTextEntry
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+              />
+            </>
           )}
+          <View style={styles.buttons}>
+            {editMode ? (
+              <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                <Text style={styles.buttonText}>Save</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={styles.editButton} onPress={() => setEditMode(true)}>
+                <Text style={styles.buttonText}>Edit Profile</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+              <Text style={styles.buttonText}>Logout</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </Pressable>
-      <View style={styles.profileSection}>
-        <TextInput
-          style={[styles.input, !editMode && styles.disabledInput]}
-          value={editMode ? userData.name : `Name: ${userData.name}`}
-          onChangeText={(text) => setUserData({ ...userData, name: text })}
-          editable={editMode}
-        />
-        <TextInput
-          style={[styles.input, styles.disabledInput]}
-          value={`Email: ${userData.email}`}
-          editable={false}
-        />
-        <TextInput
-          style={[styles.input, !editMode && styles.disabledInput]}
-          value={editMode ? userData.mobileNumber : `Contact: ${userData.mobileNumber}`}
-          onChangeText={(text) => setUserData({ ...userData, mobileNumber: text })}
-          editable={editMode}
-        />
-        <TextInput
-          style={[styles.input, !editMode && styles.disabledInput]}
-          value={editMode ? userData.city : `City: ${userData.city}`}
-          onChangeText={(text) => setUserData({ ...userData, city: text })}
-          editable={editMode}
-        />
-      </View>
-      {editMode && (
-        <>
-          <TextInput
-            style={styles.input}
-            placeholder="New Password"
-            secureTextEntry
-            value={newPassword}
-            onChangeText={setNewPassword}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Confirm Password"
-            secureTextEntry
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-          />
-        </>
-      )}
-      <View style={styles.buttons}>
-        {editMode ? (
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.buttonText}>Save</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.editButton} onPress={() => setEditMode(true)}>
-            <Text style={styles.buttonText}>Edit Profile</Text>
-          </TouchableOpacity>
-        )}
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.buttonText}>Logout</Text>
-        </TouchableOpacity>
-      </View>
+      </ImageBackground>
     </Animatable.View>
   );
 };
@@ -202,27 +216,49 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  headerImage: {
+    flex: 1,
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent overlay
     padding: 20,
-    backgroundColor: '#f0f0f0',
   },
   profilePhotoSection: {
     alignItems: 'center',
+    marginTop: 50,
     marginBottom: 20,
   },
   profilePhoto: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 10,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 3,
+    borderColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 5,
   },
   profilePhotoPlaceholder: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     backgroundColor: '#bbb',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    borderWidth: 3,
+    borderColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 5,
   },
   profilePhotoPlaceholderText: {
     color: '#fff',
@@ -278,7 +314,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   loaderContainer: {
-    flex:     1,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f0f0f0',
@@ -286,4 +322,3 @@ const styles = StyleSheet.create({
 });
 
 export default SettingsScreen;
-

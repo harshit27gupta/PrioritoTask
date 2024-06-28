@@ -293,7 +293,7 @@ cron.schedule('0 11 * * *', async () => {
           from: 'harshit.raj2023@gmail.com',
           to: task.userEmail,
           subject: 'Task Reminder',
-          text: `Your task "${task.title}" is due today.please complete it before time so that you become punctual in life`
+          text: `Your task "${task.title}" is due today.please complete it before time.`
         };
   
         transporter.sendMail(mailOptions, (error, info) => {

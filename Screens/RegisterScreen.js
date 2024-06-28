@@ -100,7 +100,7 @@ const RegisterScreen = () => {
     <ImageBackground
       source={require('../Images/registerblur.jpg')}
       style={styles.backgroundImage}
-      blurRadius={10}
+      blurRadius={5}
     >
       <ScrollView contentContainerStyle={styles.container}>
         <Animated.View style={{ opacity: fadeAnim }}>
