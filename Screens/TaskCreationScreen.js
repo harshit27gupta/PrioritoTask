@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, ScrollView, FlatList } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, ScrollView, FlatList, ImageBackground } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -55,7 +55,7 @@ const TaskCreationScreen = ({ route, navigation }) => {
             setLoading(true);
             try {
               const email = await AsyncStorage.getItem('email');
-              const response = await axios.post('https://prioritotask-12.onrender.com/tasks', {
+              const response = await axios.post('http://192.168.29.252:5000/tasks', {
                 title,
                 description,
                 dueDate,
@@ -93,113 +93,136 @@ const TaskCreationScreen = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.heading}>Create Task</Text>
-      
-      <Text style={styles.label}>Suggested</Text>
-      <FlatList
-        data={filteredSuggestions}
-        horizontal
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => selectSuggestion(item)} style={styles.suggestionCard}>
-            <Animatable.Text animation="fadeIn" style={styles.suggestionText}>{item}</Animatable.Text>
-          </TouchableOpacity>
+    <ImageBackground
+      source={require('../Images/taskcreation.jpg')}
+      style={styles.backgroundImage}
+      blurRadius={10}
+    >
+      <View style={styles.overlay} />
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.heading}>Create Task</Text>
+        
+        <Text style={styles.label}>Suggested</Text>
+        <FlatList
+          data={filteredSuggestions}
+          horizontal
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => selectSuggestion(item)} style={styles.suggestionCard}>
+              <Animatable.Text animation="fadeIn" style={styles.suggestionText}>{item}</Animatable.Text>
+            </TouchableOpacity>
+          )}
+          contentContainerStyle={styles.suggestionsContainer}
+          showsHorizontalScrollIndicator={false}
+        />
+
+        <Animatable.View animation="fadeInUp" style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Title"
+            value={title}
+            onChangeText={handleTitleChange}
+            placeholderTextColor="black"
+          />
+        </Animatable.View>
+
+        <Animatable.View animation="fadeInUp" delay={100} style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Description"
+            value={description}
+            onChangeText={setDescription}
+            multiline
+            placeholderTextColor="black"
+          />
+        </Animatable.View>
+
+        <Text style={styles.label}>Due Date</Text>
+        <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
+          <Text style={styles.dateText}>
+            {dueDate ? dueDate.toLocaleDateString() : 'Select Due Date'}
+          </Text>
+        </TouchableOpacity>
+        {showDatePicker && (
+          <DateTimePicker
+            value={dueDate || new Date()}
+            mode="date"
+            display="default"
+            onChange={handleDateChange}
+          />
         )}
-        contentContainerStyle={styles.suggestionsContainer}
-        showsHorizontalScrollIndicator={false}
-      />
 
-      <Animatable.View animation="fadeInUp" style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Title"
-          value={title}
-          onChangeText={handleTitleChange}
-        />
-      </Animatable.View>
+        <Text style={styles.label}>Priority</Text>
+        <View style={styles.priorityContainer}>
+          <TouchableOpacity onPress={() => setPriority(1)} style={[styles.priorityButton, priority === 1 && styles.selectedPriority]}>
+            <Text style={styles.priorityText}>1</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setPriority(2)} style={[styles.priorityButton, priority === 2 && styles.selectedPriority]}>
+            <Text style={styles.priorityText}>2</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setPriority(3)} style={[styles.priorityButton, priority === 3 && styles.selectedPriority]}>
+            <Text style={styles.priorityText}>3</Text>
+          </TouchableOpacity>
+        </View>
 
-      <Animatable.View animation="fadeInUp" delay={100} style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Description"
-          value={description}
-          onChangeText={setDescription}
-          multiline
-        />
-      </Animatable.View>
+        <Animatable.View animation="fadeInUp" delay={200} style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Category"
+            value={category}
+            onChangeText={setCategory}
+            placeholderTextColor="black"
+          />
+        </Animatable.View>
 
-      <Text style={styles.label}>Due Date</Text>
-      <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
-        <Text style={styles.dateText}>
-          {dueDate ? dueDate.toLocaleDateString() : 'Select Due Date'}
-        </Text>
-      </TouchableOpacity>
-      {showDatePicker && (
-        <DateTimePicker
-          value={dueDate || new Date()}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-        />
-      )}
+        <Animatable.View animation="fadeInUp" delay={300} style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Labels (comma separated)"
+            value={labels}
+            onChangeText={setLabels}
+            placeholderTextColor="black"
+          />
+        </Animatable.View>
 
-      <Text style={styles.label}>Priority</Text>
-      <View style={styles.priorityContainer}>
-        <TouchableOpacity onPress={() => setPriority(1)} style={[styles.priorityButton, priority === 1 && styles.selectedPriority]}>
-          <Text style={styles.priorityText}>1</Text>
+        <TouchableOpacity style={styles.button} onPress={handleSaveTask} disabled={loading}>
+          {loading ? <ActivityIndicator color="#fff" /> : <Animatable.Text animation="pulse" easing="ease-out" iterationCount="infinite" style={styles.buttonText}>Save Task</Animatable.Text>}
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setPriority(2)} style={[styles.priorityButton, priority === 2 && styles.selectedPriority]}>
-          <Text style={styles.priorityText}>2</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setPriority(3)} style={[styles.priorityButton, priority === 3 && styles.selectedPriority]}>
-          <Text style={styles.priorityText}>3</Text>
-        </TouchableOpacity>
-      </View>
-
-      <Animatable.View animation="fadeInUp" delay={200} style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Category"
-          value={category}
-          onChangeText={setCategory}
-        />
-      </Animatable.View>
-
-      <Animatable.View animation="fadeInUp" delay={300} style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Labels (comma separated)"
-          value={labels}
-          onChangeText={setLabels}
-        />
-      </Animatable.View>
-
-      <TouchableOpacity style={styles.button} onPress={handleSaveTask} disabled={loading}>
-        {loading ? <ActivityIndicator color="#fff" /> : <Animatable.Text animation="pulse" easing="ease-out" iterationCount="infinite" style={styles.buttonText}>Save Task</Animatable.Text>}
-      </TouchableOpacity>
-    </ScrollView>
+      </ScrollView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
   container: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
   },
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    color: '#333',
+    color: '#fff',
   },
   label: {
     fontSize: 16,
     fontWeight: 'bold',
     marginVertical: 10,
-    color: '#333',
+    color: '#fff',
   },
   inputContainer: {
     marginBottom: 15,
@@ -210,9 +233,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 15,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
     fontSize: 16,
     color: '#333',
+    fontWeight:'700'
   },
   dateButton: {
     height: 50,
@@ -222,7 +246,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
   },
   dateText: {
     fontSize: 16,
@@ -244,10 +268,12 @@ const styles = StyleSheet.create({
   selectedPriority: {
     backgroundColor: '#007BFF',
     borderColor: '#007BFF',
+     fontWeight:'700'
   },
   priorityText: {
     fontSize: 18,
-    color: '#333',
+    color: '#fff',
+     fontWeight:'700'
   },
   button: {
     height: 50,

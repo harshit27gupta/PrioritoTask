@@ -36,7 +36,7 @@ const VerifyEmailScreen = () => {
 
   const handleResendOtp = async () => {
     try {
-      const response = await axios.post('https://prioritotask-12.onrender.com/generate-otp', { email });
+      const response = await axios.post('http://192.168.29.252:5000/generate-otp', { email });
       if (response.status === 200) {
         Alert.alert('Success', 'OTP resent successfully');
         setTimer(15);

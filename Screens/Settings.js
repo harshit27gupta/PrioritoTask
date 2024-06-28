@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from "expo-image-picker";
 import * as Animatable from 'react-native-animatable';
-
+import { CommonActions } from '@react-navigation/native';
 const SettingsScreen = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,7 +20,7 @@ const SettingsScreen = () => {
     const fetchUserData = async () => {
       try {
         const email = await AsyncStorage.getItem('email');
-        const response = await axios.get(`https://prioritotask-12.onrender.com/user?email=${email}`);
+        const response = await axios.get(`http://192.168.29.252:5000/user?email=${email}`);
         const storedProfilePhoto = await AsyncStorage.getItem('profilePhoto');
         setUserData(response.data);
         if (storedProfilePhoto) {
@@ -48,7 +48,7 @@ const SettingsScreen = () => {
       setLoading(true);
       const email = await AsyncStorage.getItem('email');
       const updatedUserData = { ...userData, newPassword, email };
-      await axios.put('https://prioritotask-12.onrender.com/update-user', updatedUserData);
+      await axios.put('http://192.168.29.252:5000/update-user', updatedUserData);
       setUserData(updatedUserData);
       setEditMode(false);
       Alert.alert('Success', 'Profile updated successfully');
@@ -75,7 +75,12 @@ const SettingsScreen = () => {
           onPress: async () => {
             viewRef.current.fadeOut(500).then(async () => {
               await AsyncStorage.removeItem('token');
-              navigation.navigate('Login');
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: 'Login' }],
+                })
+              );
             });
           },
         },

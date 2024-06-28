@@ -8,7 +8,10 @@ import {
   Alert,
   ActivityIndicator,
   Image,
+  Animated,
+  ImageBackground,
 } from "react-native";
+import { BlurView } from "expo-blur";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -20,6 +23,8 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
+  const [fadeAnim] = useState(new Animated.Value(0));
+  const [scaleAnim] = useState(new Animated.Value(0.8));
 
   useEffect(() => {
     const checkToken = async () => {
@@ -30,11 +35,27 @@ const LoginScreen = () => {
     };
     checkToken();
   }, []);
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 2000,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 5,
+        useNativeDriver: true,
+      })
+    ]).start();
+  }, [fadeAnim, scaleAnim]);
+
   useFocusEffect(
     React.useCallback(() => {
       return () => {
-     setEmail('');
-     setPassword('');
+        setEmail('');
+        setPassword('');
       };
     }, [])
   );
@@ -46,95 +67,121 @@ const LoginScreen = () => {
     }
     setLoading(true);
     try {
-      const response = await axios.post("https://prioritotask-12.onrender.com/login", {
+      const response = await axios.post("http://192.168.29.252:5000/login", {
         email,
         password,
       });
       setTimeout(async () => {
         setLoading(false);
-        if (response.status === 200) {
+        if (response.status === 200 && response.data) {
           await AsyncStorage.setItem("token", response.data.token);
           await AsyncStorage.setItem("email", email);
           navigation.navigate("Main");
           setEmail("");
           setPassword("");
+        } else {
+          Alert.alert("Error", "Invalid response from server");
         }
       }, 2000);
     } catch (error) {
       setLoading(false);
-      Alert.alert("Error", error.response.data || "Invalid email or password");
+      Alert.alert("Error", error.response?.data || "Invalid email or password");
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={
-          !showPassword
-            ? require("../Images/monkeyeyeclosed.jpg")
-            : require("../Images/monkeyeyeopen.png")
-        }
-        style={styles.monkeyImage}
-      />
-      <Text style={styles.title}>Welcome User</Text>
-      <View style={styles.inputContainer}>
-        <Icon name="mail" size={20} color="#333" style={styles.icon} />
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Icon name="lock-closed" size={20} color="#333" style={styles.icon} />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={!showPassword}
-        />
-        <TouchableOpacity
-          onPress={() => setShowPassword(!showPassword)}
-          style={styles.eyeIcon}
-        >
-          <Icon
-            name={showPassword ? "eye-off" : "eye"}
-            size={20}
-            color="#333"
-          />
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleSignIn}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Sign In</Text>
-        )}
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
-        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-        <Text style={styles.registerText}>Don't have an account? Register</Text>
-      </TouchableOpacity>
-    </View>
+    <ImageBackground
+      source={require("../Images/taskss.jpg")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <BlurView intensity={50} style={styles.blurContainer}>
+        <View style={styles.container}>
+          <Animated.View style={{ opacity: fadeAnim }}>
+            <Image
+              source={
+                !showPassword
+                  ? require("../Images/monkeyeyeclosed.jpg")
+                  : require("../Images/monkeyeyeopen.png")
+              }
+              style={styles.monkeyImage}
+            />
+          </Animated.View>
+          <Animated.Text style={[styles.title, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
+            Prioritotask
+          </Animated.Text>
+          <Animated.View style={{ opacity: fadeAnim }}>
+            <View style={styles.inputContainer}>
+              <Icon name="mail" size={20} color="#333" style={styles.icon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                value={email}
+                onChangeText={(txt) => setEmail(txt)}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Icon name="lock-closed" size={20} color="#333" style={styles.icon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                value={password}
+                onChangeText={(txt) => setPassword(txt)}
+                secureTextEntry={!showPassword}
+              />
+              <TouchableOpacity
+                onPress={() => setShowPassword(!showPassword)}
+                style={styles.eyeIcon}
+              >
+                <Icon
+                  name={showPassword ? "eye-off" : "eye"}
+                  size={20}
+                  color="#333"
+                />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleSignIn}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>Sign In</Text>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
+              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+              <Text style={styles.registerText}>Don't have an account? Register</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
+      </BlurView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
     justifyContent: "center",
+  },
+  blurContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  container: {
+    width: '90%',
     padding: 20,
-    backgroundColor: "#f5f5f5",
+    borderRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    elevation: 10,
   },
   monkeyImage: {
     width: 100,
@@ -178,6 +225,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   buttonText: {
     color: "#fff",

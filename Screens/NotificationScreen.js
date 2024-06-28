@@ -27,7 +27,7 @@ const NotificationScreen = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={notifications.slice().reverse()} 
+        data={notifications} 
         keyExtractor={(item) => item._id.toString()}
         renderItem={({ item }) => (
           <Animated.View style={[styles.notification, { opacity: fadeAnim }]}>

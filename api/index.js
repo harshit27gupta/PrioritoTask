@@ -2,9 +2,7 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
 const cors = require('cors');
-dotenv.config();
 const app = express();
 
 app.use(cors());
@@ -13,7 +11,7 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const connectionsring=process.env.MONGO_URL || "mongodb+srv://coderman2004:ZUYTsWPFBDK6avBx@managetasks.efpnxs6.mongodb.net/";
+const connectionsring="mongodb+srv://coderman2004:ZUYTsWPFBDK6avBx@managetasks.efpnxs6.mongodb.net/";
 mongoose.connect( connectionsring, {
 })
     .then(() => {console.log('MongoDB connected successfully')    
@@ -208,7 +206,7 @@ app.get('/tasks', async (req, res) => {
         const currentDate = new Date();
         const tomorrowDate = new Date();
         tomorrowDate.setDate(currentDate.getDate() + 1);
-
+        updateOverdueTasks();
         const tasks = await Task.find({
             userEmail,
             status: 'in-progress',
@@ -477,7 +475,7 @@ app.get('/user', async (req, res) => {
   });
   
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

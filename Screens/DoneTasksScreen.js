@@ -12,7 +12,7 @@ const DoneTasksScreen = () => {
   const fetchDoneTasks = async () => {
     try {
       const userEmail = await AsyncStorage.getItem('email');
-      const response = await axios.get(`https://prioritotask-12.onrender.com/done-tasks?userEmail=${userEmail}`);
+      const response = await axios.get(`http://192.168.29.252:5000/done-tasks?userEmail=${userEmail}`);
       setTasks(response.data);
     } catch (error) {
       Alert.alert('Error', 'Failed to fetch done tasks');
@@ -56,7 +56,7 @@ const DoneTasksScreen = () => {
     const { title } = task;
 
     try {
-      await axios.delete(`https://prioritotask-12.onrender.com/tasks`, { data: { title, userEmail } });
+      await axios.delete(`http://192.168.29.252:5000/tasks`, { data: { title, userEmail } });
       setTasks(tasks.filter(t => t.title !== task.title));
       Alert.alert('Success', 'Task deleted successfully');
     } catch (error) {

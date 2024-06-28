@@ -13,9 +13,13 @@ const TaskListScreen = () => {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const userEmail = await AsyncStorage.getItem('email');
-      const response = await axios.get(`https://prioritotask-12.onrender.com/alltasks?userEmail=${userEmail}`);
-      setTasks(response.data);
+      try {
+        const userEmail = await AsyncStorage.getItem('email');
+        const response = await axios.get(`http://192.168.29.252:5000/alltasks?userEmail=${userEmail}`);
+        setTasks(response.data);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
     };
 
     fetchTasks();
@@ -37,7 +41,7 @@ const TaskListScreen = () => {
       ])
     ).start();
 
-    const intervalId = setInterval(fetchTasks, 600);
+    const intervalId = setInterval(fetchTasks, 60000); // Fetch tasks every 60 seconds
     return () => clearInterval(intervalId);
   }, [blinkAnim]);
 
@@ -57,23 +61,14 @@ const TaskListScreen = () => {
   };
 
   const sortedTasks = filteredTasks.sort((a, b) => {
-    const statusPriorityA = getStatusPriority(a.status);
-    const statusPriorityB = getStatusPriority(b.status);
-    
-    if (statusPriorityA !== statusPriorityB) {
-      return statusPriorityA - statusPriorityB;
-    }
-
     if (sort === 'dueDate') {
-      const dateComparison = new Date(a.dueDate) - new Date(b.dueDate);
-      if (dateComparison !== 0) return dateComparison; 
-      return b.priority - a.priority;
-    } else if (sort === 'priority') {
-      const priorityComparison = b.priority - a.priority;
-      if (priorityComparison !== 0) return priorityComparison;
       return new Date(a.dueDate) - new Date(b.dueDate);
+    } else if (sort === 'priority') {
+      return b.priority - a.priority;
     } else {
-      return 0;
+      const statusPriorityA = getStatusPriority(a.status);
+      const statusPriorityB = getStatusPriority(b.status);
+      return statusPriorityA - statusPriorityB;
     }
   });
 

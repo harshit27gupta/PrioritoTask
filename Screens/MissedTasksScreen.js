@@ -9,23 +9,22 @@ const MissedTasksScreen = () => {
 
   useEffect(() => {
     const fetchMissedTasks = async () => {
-      const userEmail = await AsyncStorage.getItem('email');
-      const response = await axios.get(`https://prioritotask-12.onrender.com/alltasks?userEmail=${userEmail}`);
-      const allTasks = response.data;
-      const currentDate = new Date();
-  
-  const startOfToday = new Date(currentDate.setHours(0, 0, 0, 0));
-
-  const filteredTasks = allTasks.filter(task => {
-    const taskDueDate = new Date(task.dueDate);
-    const taskDueDateOnly = new Date(taskDueDate.setHours(0, 0, 0, 0));
-    return taskDueDateOnly < startOfToday;
-  });
+      try {
+        const userEmail = await AsyncStorage.getItem('email');
+        const response = await axios.get(`http://192.168.29.252:5000/alltasks?userEmail=${userEmail}`);
+        const allTasks = response.data;
+        
+        const filteredTasks = allTasks.filter(task => task.status === "not done");
+        setMissedTasks(filteredTasks);
+      } catch (error) {
+        console.error('Error fetching missed tasks:', error);
+      }
+    };
 
     fetchMissedTasks();
-    const intervalId = setInterval(fetchTasks, 600);
+    const intervalId = setInterval(fetchMissedTasks, 600);
     return () => clearInterval(intervalId);
-  }}, []);
+  }, []);
 
   return (
     <View style={styles.container}>
