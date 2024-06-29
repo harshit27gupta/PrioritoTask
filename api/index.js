@@ -12,7 +12,7 @@ const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const url=process.env.MONGO_URI;
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 console.log(`PORT: ${process.env.PORT}`);
 console.log(`MONGO_URI: ${process.env.MONGO_URI}`);
 console.log(`USER_EMAIL: ${process.env.USER_EMAIL}`);
@@ -61,6 +61,7 @@ app.post('/register', async (req, res) => {
 
     try {
         await newUser.save();
+        console.log("otp sent successfully");
         const otp = crypto.randomInt(100000, 999999).toString();
         otps.set(email, await bcrypt.hash(otp, 10));
         setTimeout(() => otps.delete(email), 300000); // OTP expires in 5 minutes
@@ -479,6 +480,6 @@ app.get('/user', async (req, res) => {
       res.status(500).send('Error updating user data');
     }
   });
-app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
 });
