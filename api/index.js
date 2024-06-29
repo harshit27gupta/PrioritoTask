@@ -66,7 +66,7 @@ app.post('/register', async (req, res) => {
         setTimeout(() => otps.delete(email), 300000); // OTP expires in 5 minutes
 
         const mailOptions = {
-            from: 'harshit.raj2023@gmail.com',
+            from: process.env.USER_EMAIL,
             to: email,
             subject: 'Email Verification',
             text: `Your OTP is: ${otp}`
@@ -94,7 +94,7 @@ app.post('/generate-otp', async (req, res) => {
     setTimeout(() => otps.delete(email), 300000); // OTP expires in 5 minutes
 
     const mailOptions = {
-        from: 'harshit.raj2023@gmail.com',
+        from: process.env.USER_EMAIL,
         to: email,
         subject: 'OTP Resent',
         text: `Your OTP is: ${otp}`
@@ -143,7 +143,7 @@ app.post('/forgot-password', async (req, res) => {
     setTimeout(() => otps.delete(email), 300000); // OTP expires in 5 minutes
 
     const mailOptions = {
-        from: 'harshit.raj2023@gmail.com',
+        from: process.env.USER_EMAIL,
         to: email,
         subject: 'Password Reset OTP',
         text: `Your OTP is: ${otp}`
@@ -296,7 +296,7 @@ cron.schedule('0 11 * * *', async () => {
         const message = `Reminder: Your task "${task.title}" is due today.`;
         await Notification.create({ userEmail: task.userEmail, message });
         const mailOptions = {
-          from: 'harshit.raj2023@gmail.com',
+          from: process.env.USER_EMAIL,
           to: task.userEmail,
           subject: 'Task Reminder',
           text: `Your task "${task.title}" is due today.please complete it before time.`
@@ -315,7 +315,7 @@ cron.schedule('0 11 * * *', async () => {
         const message = `Reminder: Your task "${task.title}" is due tomorrow.`;
         await Notification.create({ userEmail: task.userEmail, message });
         const mailOptions = {
-          from: 'harshit.raj2023@gmail.com',
+          from: process.env.USER_EMAIL,
           to: task.userEmail,
           subject: 'Task Reminder',
           text: `Your task "${task.title}" is due tomorrow.please complete it before time so that you become punctual in life`
@@ -395,7 +395,7 @@ cron.schedule('0 10 * * *', async () => { // Runs every day at 9 AM
           const message = `Reminder: Your task "${task.title}" has exceeded your due date hence you are penalised.`;
       await Notification.create({ userEmail: task.userEmail, message });
             const mailOptions = {
-                from: 'harshit.raj2023@gmail.com',
+                from: process.env.USER_EMAIL,
                 to: task.userEmail,
                 subject: 'Task Overdue Reminder',
                 text: `Reminder: Your task "${task.title}" is overdue. Your credibility points will be deducted.`
