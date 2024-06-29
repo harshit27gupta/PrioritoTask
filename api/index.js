@@ -1,5 +1,5 @@
 // index.js
-
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -11,8 +11,9 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const connectionsring="mongodb+srv://coderman2004:ZUYTsWPFBDK6avBx@managetasks.efpnxs6.mongodb.net/";
-mongoose.connect( connectionsring, {
+const url=process.env.MONGO_URI;
+const PORT = process.env.PORT ;
+mongoose.connect(url, {
 })
     .then(() => {console.log('MongoDB connected successfully')    
         
@@ -34,13 +35,14 @@ mongoose.connect( connectionsring, {
     const cron = require('node-cron');
     
     const User = mongoose.model('User', userSchema);
-   
+   const userem=process.env.USER_EMAIL;
+   const userpass=process.env.USER_PASS;
       
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'harshit.raj2023@gmail.com',
-        pass: 'jabm wxak qzvu ugux'
+        user:userem,
+        pass: userpass,
     }
 });
 
@@ -473,9 +475,6 @@ app.get('/user', async (req, res) => {
       res.status(500).send('Error updating user data');
     }
   });
-  
-
-const PORT = 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
