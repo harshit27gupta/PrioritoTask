@@ -61,7 +61,7 @@ const RegisterScreen = () => {
     }
     setLoading(true);
     try {
-      const response = await axios.post('http://192.168.29.252:5000/register', {
+      const response = await axios.post('https://prioritotask.onrender.com/register', {
         name,
         email,
         password,

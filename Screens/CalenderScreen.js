@@ -20,7 +20,7 @@ const CalendarScreen = ({ navigation }) => {
   const fetchTasks = async () => {
     try {
       const userEmail = await AsyncStorage.getItem('email');
-      const response = await axios.get(`http://192.168.29.252:5000/alltasks?userEmail=${userEmail}`);
+      const response = await axios.get(`https://prioritotask.onrender.com/alltasks?userEmail=${userEmail}`);
       const tasksData = response.data.reduce((acc, task) => {
         const date = task.dueDate.split('T')[0];
         if (!acc[date]) acc[date] = [];

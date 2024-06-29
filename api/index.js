@@ -12,7 +12,11 @@ const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const url=process.env.MONGO_URI;
-const PORT = process.env.PORT ;
+const PORT = process.env.PORT || 5000;
+console.log(`PORT: ${process.env.PORT}`);
+console.log(`MONGO_URI: ${process.env.MONGO_URI}`);
+console.log(`USER_EMAIL: ${process.env.USER_EMAIL}`);
+console.log(`USER_PASS: ${process.env.USER_PASS}`);
 mongoose.connect(url, {
 })
     .then(() => {console.log('MongoDB connected successfully')    

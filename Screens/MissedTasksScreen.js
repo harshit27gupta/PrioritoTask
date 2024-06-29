@@ -12,7 +12,7 @@ const MissedTasksScreen = () => {
     const fetchMissedTasks = async () => {
       try {
         const userEmail = await AsyncStorage.getItem('email');
-        const response = await axios.get(`http://192.168.29.252:5000/alltasks?userEmail=${userEmail}`);
+        const response = await axios.get(`https://prioritotask.onrender.com/alltasks?userEmail=${userEmail}`);
         const allTasks = response.data;
         
         const filteredTasks = allTasks.filter(task => task.status === "not done");

@@ -21,7 +21,7 @@ const SettingsScreen = () => {
     const fetchUserData = async () => {
       try {
         const email = await AsyncStorage.getItem('email');
-        const response = await axios.get(`http://192.168.29.252:5000/user?email=${email}`);
+        const response = await axios.get(`https://prioritotask.onrender.com/user?email=${email}`);
         const storedProfilePhoto = await AsyncStorage.getItem('profilePhoto');
         setUserData(response.data);
         if (storedProfilePhoto) {
@@ -49,7 +49,7 @@ const SettingsScreen = () => {
       setLoading(true);
       const email = await AsyncStorage.getItem('email');
       const updatedUserData = { ...userData, newPassword, email };
-      await axios.put('http://192.168.29.252:5000/update-user', updatedUserData);
+      await axios.put('https://prioritotask.onrender.com/update-user', updatedUserData);
       setUserData(updatedUserData);
       setEditMode(false);
       Alert.alert('Success', 'Profile updated successfully');

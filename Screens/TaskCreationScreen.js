@@ -55,7 +55,7 @@ const TaskCreationScreen = ({ route, navigation }) => {
             setLoading(true);
             try {
               const email = await AsyncStorage.getItem('email');
-              const response = await axios.post('http://192.168.29.252:5000/tasks', {
+              const response = await axios.post('https://prioritotask.onrender.com/tasks', {
                 title,
                 description,
                 dueDate,

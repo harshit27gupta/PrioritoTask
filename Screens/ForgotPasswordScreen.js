@@ -16,7 +16,7 @@ const ForgotPasswordScreen = () => {
       return;
     }
     try {
-      const response = await axios.post('http://192.168.29.252:5000/forgot-password', { email });
+      const response = await axios.post('https://prioritotask.onrender.com/forgot-password', { email });
       if (response.status === 200) {
         setIsVerified(true);
         setTimeout(() => {

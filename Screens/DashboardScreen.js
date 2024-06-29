@@ -23,7 +23,7 @@ const DashboardScreen = () => {
     const fetchTasks = async () => {
       try {
         const userEmail = await AsyncStorage.getItem('email');
-        const response = await axios.get(`http://192.168.29.252:5000/tasks?userEmail=${userEmail}`);
+        const response = await axios.get(`https://prioritotask.onrender.com/tasks?userEmail=${userEmail}`);
         setTasks(response.data);
       } catch (error) {
         Alert.alert('Error', 'Failed to fetch tasks');
@@ -129,7 +129,7 @@ const DashboardScreen = () => {
     const { title } = editingTask;
 
     try {
-      const response = await axios.put(`http://192.168.29.252:5000/tasks`, {
+      const response = await axios.put(`https://prioritotask.onrender.com/tasks`, {
         title,
         userEmail,
         newTitle: taskTitle,
@@ -163,7 +163,7 @@ const DashboardScreen = () => {
     const { title } = task;
 
     try {
-      await axios.delete(`http://192.168.29.252:5000/tasks`, { data: { title, userEmail } });
+      await axios.delete(`https://prioritotask.onrender.com/tasks`, { data: { title, userEmail } });
       setTasks(tasks.filter(t => t.title !== task.title));
       Alert.alert('Success', 'Task deleted successfully');
       addNotification("Task deleted successfully");
@@ -189,7 +189,7 @@ const DashboardScreen = () => {
     const { title } = task;
 
     try {
-      const response = await axios.put(`http://192.168.29.252:5000/mark-done`, {
+      const response = await axios.put(`https://prioritotask.onrender.com/mark-done`, {
         title,
         userEmail,
       });

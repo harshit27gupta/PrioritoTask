@@ -12,7 +12,7 @@ export const NotificationProvider = ({ children }) => {
       const userEmail = await AsyncStorage.getItem('email');
       if (userEmail) {
         try {
-          const response = await axios.get(`http://192.168.29.252:5000/notifications?userEmail=${userEmail}`);
+          const response = await axios.get(`https://prioritotask.onrender.com/notifications?userEmail=${userEmail}`);
           setNotifications(response.data);
         } catch (error) {
           console.error('Error fetching notifications:', error.message);
@@ -29,7 +29,7 @@ export const NotificationProvider = ({ children }) => {
     const userEmail = await AsyncStorage.getItem('email');
     if (userEmail) {
       try {
-        const response = await axios.post('http://192.168.29.252:5000/notifications', { message, userEmail });
+        const response = await axios.post('https://prioritotask.onrender.com/notifications', { message, userEmail });
         setNotifications((prevNotifications) => [
           ...prevNotifications,
           response.data,
@@ -42,7 +42,7 @@ export const NotificationProvider = ({ children }) => {
 
   const removeNotification = async (id) => {
     try {
-      await axios.delete(`http://192.168.29.252:5000/notifications/${id}`);
+      await axios.delete(`https://prioritotask.onrender.com/notifications/${id}`);
       setNotifications((prevNotifications) =>
         prevNotifications.filter((notification) => notification._id !== id)
       );
