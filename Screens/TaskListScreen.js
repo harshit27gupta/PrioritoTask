@@ -42,7 +42,7 @@ const TaskListScreen = () => {
       ])
     ).start();
 
-    const intervalId = setInterval(fetchTasks, 60000); // Fetch tasks every 60 seconds
+    const intervalId = setInterval(fetchTasks, 6000); // Fetch tasks every 60 seconds
     return () => clearInterval(intervalId);
   }, [blinkAnim]);
 
