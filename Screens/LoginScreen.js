@@ -98,14 +98,6 @@ const LoginScreen = () => {
       <BlurView intensity={50} style={styles.blurContainer}>
         <View style={styles.container}>
           <Animated.View style={{ opacity: fadeAnim }}>
-            <Image
-              source={
-                !showPassword
-                  ? require("../Images/monkeyeyeclosed.jpg")
-                  : require("../Images/monkeyeyeopen.png")
-              }
-              style={styles.monkeyImage}
-            />
           </Animated.View>
           <Animated.Text style={[styles.title, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
             Prioritotask
