@@ -2,6 +2,7 @@ PrioritoTask!!
 PrioritoTask is a modern, full-featured task management system designed to help users organize, 
 prioritize, and complete their daily tasks efficiently. With a stunning mobile interface and a robust backend, 
 PrioritoTask ensures you never miss a deadline and stay productive every day
+
 See down  for app ui
 ✨ Features
 
