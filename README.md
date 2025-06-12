@@ -2,7 +2,7 @@ PrioritoTask!!
 PrioritoTask is a modern, full-featured task management system designed to help users organize, 
 prioritize, and complete their daily tasks efficiently. With a stunning mobile interface and a robust backend, 
 PrioritoTask ensures you never miss a deadline and stay productive every day
-
+See down  for app ui
 ✨ Features
 
 User Registration & Authentication
@@ -98,3 +98,16 @@ npm run start
 
 
 Run on Android/iOS device or emulator, or open in web browser.
+
+
+![image](https://github.com/user-attachments/assets/86eaef2d-234f-4dcb-be51-1c708149c614)
+![image](https://github.com/user-attachments/assets/e2d91827-585b-415d-992c-18f957e22cdd)
+![image](https://github.com/user-attachments/assets/f4257648-14c6-46fb-a7f4-e5530098ce80)
+![image](https://github.com/user-attachments/assets/c1458a06-f1e1-479f-a283-80b90d346746)
+![image](https://github.com/user-attachments/assets/69b6112f-e209-4752-9099-48bc95e0df7b)
+![image](https://github.com/user-attachments/assets/d1c30547-cbdb-4031-b895-6bcf4ea4565a)
+![image](https://github.com/user-attachments/assets/14261b0f-b9b6-4cee-9a8c-12b8b7d27981)
+![image](https://github.com/user-attachments/assets/11b2e9b8-4103-4871-8ccf-8ed8d524666d)
+![image](https://github.com/user-attachments/assets/ee5a271c-0dd0-4444-ae01-4fa7596e08e4)
+![image](https://github.com/user-attachments/assets/6b01a2b7-d009-4232-a7a2-aea5e16df88e)
+
