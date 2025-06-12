@@ -6,9 +6,6 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNotification } from '../NotificationContext';
 import LottieView from 'lottie-react-native';
-
-// Import imag
-
 const DashboardScreen = () => {
   const navigation = useNavigation();
   const [tasks, setTasks] = useState([]);
